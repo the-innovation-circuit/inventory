@@ -5,12 +5,14 @@ import theme from '@the-innovation-circuit/theme'
 import Head from 'next/head'
 import { ThemeProvider } from 'theme-ui'
 import ColorSwitcher from '../components/color-switcher'
+import NProgress from '../components/nprogress'
 
 export default class App extends NextApp {
   render() {
     const { Component, pageProps } = this.props
     return (
       <ThemeProvider theme={theme}>
+        <NProgress />
         <Head>
           <link
             rel="apple-touch-icon"
