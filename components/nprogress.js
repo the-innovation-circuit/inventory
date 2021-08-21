@@ -4,7 +4,7 @@ import NProgress from 'nprogress'
 import { useRouter } from 'next/router'
 
 const NProgressContainer = ({
-  color = "#674ea7ff",
+  color = "#fff",
   showAfterMs = 50,
   spinner = false
 }) => {
@@ -35,7 +35,7 @@ const NProgressContainer = ({
         pointer-events: none;
       }
       #nprogress .bar {
-        background: #674ea7ff;
+        background: #fff;
         position: fixed;
         z-index: 1031;
         top: 0;
@@ -49,7 +49,7 @@ const NProgressContainer = ({
         right: 0px;
         width: 100px;
         height: 100%;
-        box-shadow: 0 0 10px #ec3750, 0 0 5px #674ea7ff;
+        box-shadow: 0 0 10px #fff, 0 0 5px #fff;
         opacity: 1;
         -webkit-transform: rotate(3deg) translate(0px, -4px);
         -ms-transform: rotate(3deg) translate(0px, -4px);
