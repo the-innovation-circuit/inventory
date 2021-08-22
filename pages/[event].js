@@ -31,7 +31,7 @@ export default function App({ event, action }) {
       error: `Failed to check out hardware for ${event.fields.Name}.`
     }
   }
-  const handleScan = data => {
+  const handleScan = async data => {
     if (data && result != data) {
       setResult(data)
       if (!data.includes('rec')) {
@@ -79,7 +79,25 @@ export default function App({ event, action }) {
               }
             })
         } else {
-          toast.success('dw! the user is logged in!')
+          const toastId = toast.loading('Loading...!')
+          let callResponse = await fetch(
+            `/api/${event.id}/hardware?item=${data}&attendee=${user.id}`
+          ).then(r => r.json())
+          if (callResponse.success) {
+            playYes()
+            navigator.vibrate(400)
+            setResult('')
+            toast.success(`${callResponse.name} checked ${callResponse.checkedType}!`, {
+              id: toastId
+            })
+          } else {
+            playNo()
+            setResult('')
+            navigator.vibrate(400)
+            toast.error('Failed hardware check-in/check-out!', {
+              id: toastId
+            })
+          }
         }
       }
     }

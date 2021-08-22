@@ -2,7 +2,8 @@ export default async function handler(req, res) {
     const { cardsAirtable } = require('../../../lib/airtable')
     try{
         const updateCall = await cardsAirtable.update(req.query.item, {
-            "Assigned To @ Event": req.query.name
+            "Assigned To @ Event": req.query.name,
+            "Event": [req.query.event]
         })
         res.json({success: true})
     }
