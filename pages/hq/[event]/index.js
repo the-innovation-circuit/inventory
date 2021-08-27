@@ -1,5 +1,7 @@
 import { Box, Flex, Heading, Text } from 'theme-ui'
 import Link from 'next/link'
+import { getSession } from 'next-auth/client'
+import checkUser from '../../../lib/check'
 
 export default function HQEventIndex({ event }) {
   let items = [
@@ -43,18 +45,26 @@ export default function HQEventIndex({ event }) {
           </Link>
         ))}
         <Heading as="h1" mt={3}>
-            <Link href={`/hq`}>
+          <Link href={`/hq`}>
             <Text sx={{ bg: 'white', px: 3, color: 'primary', py: 1 }}>
               {'Go Back'}
-            </Text></Link>
-          </Heading>
+            </Text>
+          </Link>
+        </Heading>
       </Box>
     </Flex>
   )
 }
 
-export async function getServerSideProps({ params }) {
+export async function getServerSideProps(ctx) {
   const { eventsAirtable } = require('../../../lib/airtable')
-  const event = await eventsAirtable.find(params.event)
-  return { props: { event } }
+  const session = await getSession(ctx)
+  if (await checkUser(session?.user.name)) {
+    const event = await eventsAirtable.find(ctx.params.event)
+    return { props: { event } }
+  } else {
+    ctx.res.setHeader('location', '/')
+    ctx.res.statusCode = 302
+    ctx.res.end()
+  }
 }

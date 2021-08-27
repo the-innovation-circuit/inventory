@@ -6,6 +6,7 @@ import { Box, Flex, Heading, Text } from 'theme-ui'
 import toast, { Toaster } from 'react-hot-toast'
 import useSound from 'use-sound'
 import {useRouter} from 'next/router'
+import { signIn } from "next-auth/client"
 
 export default function App() {
   const router = useRouter()
@@ -84,8 +85,8 @@ export default function App() {
               border: '6px solid white'
             }}
           />
-          <Link href={`/hq`}>
             <Heading
+              onClick={() => signIn('github', { callbackUrl: 'http://localhost:3000/hq' })}
               sx={{
                 bg: 'white',
                 px: 3,
@@ -98,7 +99,6 @@ export default function App() {
             >
               HQ Management Zone
             </Heading>
-          </Link>
         </Box>
       </Flex>
     </>

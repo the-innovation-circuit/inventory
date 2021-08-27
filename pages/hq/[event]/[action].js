@@ -6,6 +6,8 @@ import toast, { Toaster } from 'react-hot-toast'
 import useSound from 'use-sound'
 import Link from 'next/link'
 const title = require('title')
+import { getSession } from 'next-auth/client'
+import checkUser from '../../../lib/check'
 
 export default function App({ event, action }) {
   const [result, setResult] = useState('')
@@ -103,9 +105,10 @@ export default function App({ event, action }) {
           />
           <Heading as="h1" mt={3}>
             <Link href={`/hq/${event.id}`}>
-            <Text sx={{ bg: 'white', px: 3, color: 'primary', py: 1 }}>
-              {'Go Back'}
-            </Text></Link>
+              <Text sx={{ bg: 'white', px: 3, color: 'primary', py: 1 }}>
+                {'Go Back'}
+              </Text>
+            </Link>
           </Heading>
         </Box>
       </Flex>
@@ -113,8 +116,15 @@ export default function App({ event, action }) {
   )
 }
 
-export async function getServerSideProps({ params }) {
+export async function getServerSideProps(ctx) {
   const { eventsAirtable } = require('../../../lib/airtable')
-  const event = await eventsAirtable.find(params.event)
-  return { props: { event, action: params.action } }
+  const session = await getSession(ctx)
+  if (await checkUser(session?.user.name)) {
+    const event = await eventsAirtable.find(ctx.params.event)
+    return { props: { event, action: ctx.params.action } }
+  } else {
+    ctx.res.setHeader('location', '/')
+    ctx.res.statusCode = 302
+    ctx.res.end()
+  }
 }
